@@ -1,0 +1,95 @@
+mysql> use FILDB1;
+Database changed
+mysql> CREATE TABLE faculty(id INT AUTO_INCREMENT PRIMARY KEY,name VARCHAR(50),email VARCHAR(100) UNIQUE,password VARCHAR(40),mobile_number VARCHAR(15))
+;
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> CREATE TABLE course(id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(50),duration VARCHAR(30));
+ERROR 1050 (42S01): Table 'course' already exists
+mysql> DROP TABLE course;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> CREATE TABLE course(id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(50),duration VARCHAR(30));
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> CREATE TABLE faculty_course_assignment(id INT AUTO_INCREMENT PRIMARY
+KEY, faculty_id INT, course_id INT, FOREIGN KEY(faculty_id) REFERENCES faculty(id),FOREIGN KEY (course_id) REFERENCES course(id));
+Query OK, 0 rows affected (0.05 sec)
+
+mysql>
+mysql> INSERT INTO faculty (name, email, password, mobile_number)
+    -> VALUES
+    -> ('John Doe', 'john.doe@example.com', 'password123', '9876543210'),
+    -> ('Jane Smith', 'jane.smith@example.com', 'securepass', '8765432109');
+Query OK, 2 rows affected (0.02 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO faculty (name, email, password, mobile_number)
+    -> VALUES
+    -> ('John Doe', 'john.doe@example.com', 'password123', '9876543210'),
+    -> ('Jane Smith', 'jane.smith@example.com', 'securepass', '8765432109');
+ERROR 1062 (23000): Duplicate entry 'john.doe@example.com' for key 'faculty.email'
+mysql> TRUNCATE TABLE faculty;
+ERROR 1701 (42000): Cannot truncate a table referenced in a foreign key constraint (`fildb1`.`faculty_course_assignment`, CONSTRAINT `faculty_course_assignment_ibfk_1`)
+mysql> INSERT INTO faculty (name, email, password, mobile_number) VALUES  ('faculty1', 'hello@gmail.com', 'pass1', '9876543210'), ('user2', 'hello1@gmail.com', 'pass2', '9876543210');
+Query OK, 2 rows affected (0.01 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO course (name, duration)
+    -> VALUES
+    -> ('Java Programming', '3 Months'),
+    -> ('Spring Framework', '2 Months');
+Query OK, 2 rows affected (0.01 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO faculty_course_assignment (faculty_id, course_id)
+    -> VALUES
+    -> (1, 1),  -- Assign John Doe to Java Programming
+    -> (1, 2),  -- Assign John Doe to Spring Framework
+    -> helllll
+    -> INSERT INTO faculty_course_assignment (faculty_id, course_id)
+    -> VALUES
+    -> (1, 1),  -- Assign John Doe to Java Programming
+    -> (1, 2),  -- Assign John Doe to Spring Framework
+    -> (2, 1);  -- Assign Jane Smith to Java Programming
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'helllll
+INSERT INTO faculty_course_assignment (faculty_id, course_id)
+VALUES
+(' at line 5
+mysql> INSERT INTO faculty_course_assignment (faculty_id, course_id)
+    -> VALUES
+    -> (1, 1),  -- Assign John Doe to Java Programming
+    -> (1, 2),  -- Assign John Doe to Spring Framework
+    -> (2, 1);  -- Assign Jane Smith to Java Programming
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM faculty;
++----+------------+------------------------+-------------+---------------+
+| id | name       | email                  | password    | mobile_number |
++----+------------+------------------------+-------------+---------------+
+|  1 | John Doe   | john.doe@example.com   | password123 | 9876543210    |
+|  2 | Jane Smith | jane.smith@example.com | securepass  | 8765432109    |
+|  5 | faculty1   | hello@gmail.com        | pass1       | 9876543210    |
+|  6 | user2      | hello1@gmail.com       | pass2       | 9876543210    |
++----+------------+------------------------+-------------+---------------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT * FROM course;
++----+------------------+----------+
+| id | name             | duration |
++----+------------------+----------+
+|  1 | Java Programming | 3 Months |
+|  2 | Spring Framework | 2 Months |
++----+------------------+----------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT * FROM faculty_course_assignment;
++----+------------+-----------+
+| id | faculty_id | course_id |
++----+------------+-----------+
+|  1 |          1 |         1 |
+|  2 |          1 |         2 |
+|  3 |          2 |         1 |
++----+------------+-----------+
+3 rows in set (0.00 sec)
